@@ -1,0 +1,21 @@
+name: CI (pull request)
+
+on:
+  pull_request:
+
+jobs:
+  test-environment:
+    name: Deploy
+
+    runs-on: ubuntu-latest
+    environment:
+      name: pr
+      url: https://github.com/$GITHUB_REPOSITORY/pull/${{ github.event.number }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Log deployments
+        run: gh api -X GET "repos/$GITHUB_REPOSITORY/deployments" 
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
